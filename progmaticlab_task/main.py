@@ -21,33 +21,34 @@ def calculate_expession(operations: List[str]):
                 rightValue = numbers[index + 1]
     return(result)
 
-
-def find_combination(current_operations: List[str]) -> Optional[List[str]]:
+def find_combinations(current_operations: List[str] = [], founded_operations: List[List[str]] = []) -> Optional[List[List[str]]]:
     if len(current_operations) == 9:
         result = calculate_expession(current_operations)
         if result == 200:
-           return current_operations
-        return None
+            founded_operations.append([*current_operations])
+        return
+
     for operation in possible_operations:
         current_operations.append(operation)
-        result = find_combination(current_operations)
-        if result:
-            return result
+        result = find_combinations(current_operations, founded_operations)
         current_operations.pop()
+    return founded_operations
 
 
-def get_full_expression(combination: Optional[List[str]]) -> str:
+def get_full_expressions(combinations: Optional[List[List[str]]]) -> str:
     result = ''
-    if combination:
-        for number, operation in zip(numbers, combination):
-            result += str(number) + operation
-        result += str(numbers[-1])
+    if combinations:
+        for combination in combinations:
+            for number, operation in zip(numbers, combination):
+                result += str(number) + operation
+            result += str(numbers[-1])
+            result+='\n'
     return result
 
 
-combination = find_combination([])
-expression = get_full_expression(combination)
-print(combination)
+combinations = find_combinations()
+expression = get_full_expressions(combinations)
+print(combinations)
 print(expression)
 
 
